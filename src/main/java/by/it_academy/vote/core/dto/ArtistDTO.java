@@ -3,10 +3,20 @@ package by.it_academy.vote.core.dto;
 import java.util.Objects;
 
 public class ArtistDTO {
+    private int id;
     private String name;
 
-    public ArtistDTO(String name) {
+    public ArtistDTO(int id, String name) {
+        this.id = id;
         this.name = name;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -22,18 +32,19 @@ public class ArtistDTO {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ArtistDTO artistDTO = (ArtistDTO) o;
-        return Objects.equals(name, artistDTO.name);
+        return id == artistDTO.id && Objects.equals(name, artistDTO.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name);
+        return Objects.hash(id, name);
     }
 
     @Override
     public String toString() {
         return "ArtistDTO{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 '}';
     }
 }

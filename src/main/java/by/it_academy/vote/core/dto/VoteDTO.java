@@ -4,38 +4,26 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public class VoteDTO {
-    private String artist;
-    private String[] genres;
+    private int artist;
+    private int[] genres;
     private String about;
 
-    public VoteDTO(String artist, String[] genres, String about) {
+    private VoteDTO(int artist, int[] genres, String about) {
         this.artist = artist;
         this.genres = genres;
         this.about = about;
     }
 
-    public String getArtist() {
+    public int getArtist() {
         return artist;
     }
 
-    public void setArtist(String artist) {
-        this.artist = artist;
-    }
-
-    public String[] getGenres() {
+    public int[] getGenres() {
         return genres;
-    }
-
-    public void setGenres(String[] genres) {
-        this.genres = genres;
     }
 
     public String getAbout() {
         return about;
-    }
-
-    public void setAbout(String about) {
-        this.about = about;
     }
 
     @Override
@@ -60,5 +48,36 @@ public class VoteDTO {
                 ", genres=" + Arrays.toString(genres) +
                 ", about='" + about + '\'' +
                 '}';
+    }
+
+    public static class VoteDTOBuilder{
+        private int artist;
+        private int[] genres;
+        private String about;
+
+        private VoteDTOBuilder(){}
+
+        public static VoteDTOBuilder create(){
+            return new VoteDTOBuilder();
+        }
+
+        public VoteDTOBuilder setArtist(int artist) {
+            this.artist = artist;
+            return this;
+        }
+
+        public VoteDTOBuilder setGenres(int[] genres) {
+            this.genres = genres;
+            return this;
+        }
+
+        public VoteDTOBuilder setAbout(String about) {
+            this.about = about;
+            return this;
+        }
+
+        public VoteDTO build() {
+            return new VoteDTO(artist, genres, about);
+        }
     }
 }

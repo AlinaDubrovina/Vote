@@ -4,39 +4,35 @@ import by.it_academy.vote.core.dto.ArtistDTO;
 import by.it_academy.vote.dao.api.IArtistDAO;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ArtistDAO implements IArtistDAO {
-    private List<ArtistDTO> artists = new ArrayList<>();
+    private Map<Integer, ArtistDTO> artists = new HashMap<>();
 
-    public ArtistDAO(List<ArtistDTO> artists) {
+    public ArtistDAO(Map<Integer, ArtistDTO> artists) {
         this.artists = artists;
     }
 
     public ArtistDAO() {
-        this.artists.add(new ArtistDTO("Selena Gomez"));
-        this.artists.add(new ArtistDTO("Metallica"));
-        this.artists.add(new ArtistDTO("Nirvana"));
-        this.artists.add(new ArtistDTO("Michael Jackson"));
-        this.artists.add(new ArtistDTO("James Brown"));
-        this.artists.add(new ArtistDTO("Wolfgang Amadeus Mozart"));
-        this.artists.add(new ArtistDTO("Jay-Z"));
-        this.artists.add(new ArtistDTO("50 Cent"));
+        this.artists.put(1, new ArtistDTO(1, "Selena Gomez"));
+        this.artists.put(2, new ArtistDTO(2, "Metallica"));
+        this.artists.put(3, new ArtistDTO(3, "Nirvana"));
+        this.artists.put(4, new ArtistDTO(4, "Michael Jackson"));
+        this.artists.put(5, new ArtistDTO(5, "James Brown"));
+        this.artists.put(6, new ArtistDTO(6, "Wolfgang Amadeus Mozart"));
+        this.artists.put(7, new ArtistDTO(7, "Jay-Z"));
+        this.artists.put(8, new ArtistDTO(8, "50 Cent"));
     }
 
     @Override
     public List<ArtistDTO> get() {
-        return artists;
+        return new ArrayList<>(artists.values());
     }
 
     @Override
-    public boolean exist(String name) {
-        List<ArtistDTO> artistDTOS = get();
-        for (ArtistDTO artistDTO : artistDTOS){
-            if (name.equals(artistDTO.getName())){
-                return true;
-            }
-        }
-        return false;
+    public boolean exist(int id) {
+        return this.artists.get(id) != null;
     }
 }

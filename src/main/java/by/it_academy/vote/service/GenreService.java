@@ -18,10 +18,14 @@ public class GenreService implements IGenreService {
     }
 
     @Override
-    public boolean exist(String name) {
-        if (name == null){
-            throw new IllegalArgumentException("Genre should not be empty.");
+    public boolean exist(int id) {
+        List<GenreDTO> genreDTOS = this.dao.get();
+        for (GenreDTO genreDTO : genreDTOS){
+            if (id == genreDTO.getId()){
+                return true;
+
+            }
         }
-        return this.dao.exist(name);
+        return false;
     }
 }

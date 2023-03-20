@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
-@WebServlet(name = "NominationArtistServlet", urlPatterns = "nominations/artists")
+@WebServlet(name = "NominationArtistServlet", urlPatterns = "/artists")
 public class NominationArtistServlet extends HttpServlet {
     private final IArtistService artistService;
 
@@ -30,7 +30,7 @@ public class NominationArtistServlet extends HttpServlet {
 
         PrintWriter writer = resp.getWriter();
         for (ArtistDTO artistDTO : artistDTOS) {
-            writer.write("<p>" + artistDTO.getName() + "</p>");
+            writer.write("<p>" + artistDTO.getId() + " - " + artistDTO.getName() + "</p>");
         }
     }
 }

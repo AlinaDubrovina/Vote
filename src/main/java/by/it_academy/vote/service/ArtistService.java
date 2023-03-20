@@ -19,10 +19,14 @@ public class ArtistService implements IArtistService {
     }
 
     @Override
-    public boolean exist(String name) {
-        if (name == null){
-            throw new IllegalArgumentException("Artist should not be empty.");
+    public boolean exist(int id) {
+        List<ArtistDTO> artistDTOS = this.dao.get();
+        for (ArtistDTO artistDTO : artistDTOS){
+            if (id == artistDTO.getId()){
+                return true;
+
+            }
         }
-        return this.dao.exist(name);
+        return false;
     }
 }

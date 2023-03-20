@@ -3,10 +3,20 @@ package by.it_academy.vote.core.dto;
 import java.util.Objects;
 
 public class GenreDTO {
+    private int id;
     private String name;
 
-    public GenreDTO(String name) {
+    public GenreDTO(int id, String name) {
+        this.id = id;
         this.name = name;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -22,18 +32,19 @@ public class GenreDTO {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         GenreDTO genreDTO = (GenreDTO) o;
-        return Objects.equals(name, genreDTO.name);
+        return id == genreDTO.id && Objects.equals(name, genreDTO.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name);
+        return Objects.hash(id, name);
     }
 
     @Override
     public String toString() {
         return "GenreDTO{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 '}';
     }
 }

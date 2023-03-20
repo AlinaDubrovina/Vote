@@ -30,34 +30,27 @@ public class VoteService implements IVoteService {
     }
 
     private void validate(VoteDTO vote){
-        String artist = vote.getArtist();
-        if (artist == null || artist.isBlank()){
-            throw new IllegalArgumentException("Choose an artist.");
-        }
         if (!this.artistService.exist(vote.getArtist())){
             throw new IllegalArgumentException("The artist " + vote.getArtist() + " does not exist.");
         }
 
-        String[] genres = vote.getGenres();
+        int[] genres = vote.getGenres();
         if (genres == null){
             throw new IllegalArgumentException("Choose genres.");
         }
         if (genres.length < 3 || genres.length > 5){
             throw new IllegalArgumentException("3 to 5 genres must be selected.");
         }
-        for (String genre : vote.getGenres()){
-            if (genre == null || genre.isBlank()){
-                throw new IllegalArgumentException("Choose a genre.");
-            }
+        for (int genre : vote.getGenres()){
             if (!this.genreService.exist(genre)){
                 throw new IllegalArgumentException("The genre " + genre + " does not exist.");
             }
         }
-        Set<String> names = new HashSet<>();
-        names.addAll(Arrays.asList(genres));
-        if(genres.length != names.size()){
-            throw new IllegalArgumentException("Genres repeat.");
+        Set<Integer> names = new HashSet<>();
+        for (int genre : genres){
+            names.add(genre);
         }
+
 
         String about = vote.getAbout();
         if (about == null || about.isBlank()){

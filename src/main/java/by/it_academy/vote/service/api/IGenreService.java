@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface IGenreService {
     List<GenreDTO> get();
-    boolean exist(String name);
+    boolean exist(int id);
 }

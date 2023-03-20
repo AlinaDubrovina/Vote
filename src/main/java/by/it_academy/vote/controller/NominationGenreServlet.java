@@ -13,11 +13,11 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
-@WebServlet(name = "NominationGenreServlet", urlPatterns = "/nominations/genres")
+@WebServlet(name = "NominationGenreServlet", urlPatterns = "/genres")
 public class NominationGenreServlet extends HttpServlet {
     private final IGenreService genreService;
 
-    public NominationGenreServlet(IGenreService genreService) {
+    public NominationGenreServlet() {
         this.genreService = GenreServiceSingleton.getInstance();
     }
 
@@ -30,7 +30,7 @@ public class NominationGenreServlet extends HttpServlet {
 
         PrintWriter writer = resp.getWriter();
         for (GenreDTO genreDTO : genreDTOS){
-            writer.write("<p>" + genreDTO.getName() + "</p>");
+            writer.write("<p>" + genreDTO.getId() + " - " + genreDTO.getName() + "</p>");
         }
     }
 }

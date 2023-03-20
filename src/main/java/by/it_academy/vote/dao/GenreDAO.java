@@ -4,39 +4,35 @@ import by.it_academy.vote.core.dto.GenreDTO;
 import by.it_academy.vote.dao.api.IGenreDAO;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class GenreDAO implements IGenreDAO {
-    private List<GenreDTO> genres = new ArrayList<>();
+    private Map<Integer, GenreDTO> genres = new HashMap<>();
 
-    public GenreDAO(List<GenreDTO> genres) {
+    public GenreDAO(Map<Integer, GenreDTO> genres) {
         this.genres = genres;
     }
 
     public GenreDAO() {
-        this.genres.add(new GenreDTO("Rock"));
-        this.genres.add(new GenreDTO("Classical music"));
-        this.genres.add(new GenreDTO("Rap"));
-        this.genres.add(new GenreDTO("R&B"));
-        this.genres.add(new GenreDTO("POP"));
-        this.genres.add(new GenreDTO("KPOP"));
-        this.genres.add(new GenreDTO("Jazz"));
+        this.genres.put(1, new GenreDTO(1, "Rock"));
+        this.genres.put(2, new GenreDTO(2, "Classical music"));
+        this.genres.put(3, new GenreDTO(3, "Rap"));
+        this.genres.put(4, new GenreDTO(4, "R&B"));
+        this.genres.put(5, new GenreDTO(5, "POP"));
+        this.genres.put(6, new GenreDTO(6, "KPOP"));
+        this.genres.put(7, new GenreDTO(7, "Jazz"));
     }
 
     @Override
     public List<GenreDTO> get() {
-        return genres;
+        return new ArrayList<>(genres.values());
     }
 
     @Override
-    public boolean exist(String name) {
-        List<GenreDTO> genreDTOS = get();
-        for (GenreDTO genreDTO : genreDTOS){
-            if (name.equals(genreDTO.getName())){
-                return true;
-            }
-        }
-        return false;
+    public boolean exist(int id) {
+        return this.genres.get(id) != null;
     }
 }
 

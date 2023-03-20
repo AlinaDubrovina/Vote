@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Map;
 
 @WebServlet(name = "VoteServlet", urlPatterns = "/vote")
@@ -31,17 +32,27 @@ public class VoteServlet extends HttpServlet {
         Map<String, String[]> parameterMap = req.getParameterMap();
 
         String[] artists = parameterMap.get(ARTIST_NAME_PARAMETER);
-        String artist = (artists == null) ? null : artists[0];
-        if (artists == null || artists.length > 1){
+        String artistRaw = (artists == null) ? null : artists[0];
+        if (artistRaw == null || artists.length > 1){
             throw new IllegalArgumentException("1 artist must be listed");
         }
 
-        String[] genres = parameterMap.get(GENRE_NAME_PARAMETER);
+        String[] genresRaw = parameterMap.get(GENRE_NAME_PARAMETER);
 
-        String[] abouts = parameterMap.get(ARTIST_NAME_PARAMETER);
+        String[] abouts = parameterMap.get(ABOUT_NAME_PARAMETER);
+
+        int artist = Integer.parseInt(artistRaw);
+        int[] genres = genresRaw == null ? null :
+                Arrays.stream(genresRaw)
+                        .mapToInt(value -> Integer.parseInt(value))
+                        .toArray();
         String about = (abouts == null) ? null : abouts[0];
 
-        VoteDTO vote = new VoteDTO(artist, genres, about);
+        VoteDTO vote = VoteDTO.VoteDTOBuilder.create()
+                .setArtist(artist)
+                .setGenres(genres)
+                .setAbout(about)
+                .build();
         this.voteService.save(vote);
     }
 }
