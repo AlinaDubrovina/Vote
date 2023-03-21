@@ -14,19 +14,18 @@ public class ArtistService implements IArtistService {
     }
 
     @Override
+    public ArtistDTO get(int id) {
+        return this.dao.get(id);
+    }
+
+    @Override
     public List<ArtistDTO> get() {
         return dao.get();
     }
 
+
     @Override
     public boolean exist(int id) {
-        List<ArtistDTO> artistDTOS = this.dao.get();
-        for (ArtistDTO artistDTO : artistDTOS){
-            if (id == artistDTO.getId()){
-                return true;
-
-            }
-        }
-        return false;
+        return this.dao.exist(id);
     }
 }

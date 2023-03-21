@@ -7,8 +7,8 @@ import by.it_academy.vote.service.api.IArtistService;
 import by.it_academy.vote.service.api.IGenreService;
 import by.it_academy.vote.service.api.IVoteService;
 
-import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class VoteService implements IVoteService {
@@ -27,6 +27,11 @@ public class VoteService implements IVoteService {
         this.validate(vote);
         SavedVoteDTO savedVoteDTO = new SavedVoteDTO(vote);
         this.voteDAO.save(savedVoteDTO);
+    }
+
+    @Override
+    public List<SavedVoteDTO> get() {
+        return this.voteDAO.get();
     }
 
     private void validate(VoteDTO vote){

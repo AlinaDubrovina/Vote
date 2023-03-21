@@ -26,6 +26,11 @@ public class GenreDAO implements IGenreDAO {
     }
 
     @Override
+    public GenreDTO get(int id) {
+        return this.genres.get(id);
+    }
+
+    @Override
     public List<GenreDTO> get() {
         return new ArrayList<>(genres.values());
     }

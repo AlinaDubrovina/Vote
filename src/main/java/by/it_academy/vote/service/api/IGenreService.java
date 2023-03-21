@@ -6,5 +6,8 @@ import java.util.List;
 
 public interface IGenreService {
     List<GenreDTO> get();
+
+    GenreDTO get(int id);
+
     boolean exist(int id);
 }

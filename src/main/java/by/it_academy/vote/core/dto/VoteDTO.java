@@ -52,7 +52,7 @@ public class VoteDTO {
 
     public static class VoteDTOBuilder{
         private int artist;
-        private int[] genres;
+        private int[] genres = new int[0];
         private String about;
 
         private VoteDTOBuilder(){}

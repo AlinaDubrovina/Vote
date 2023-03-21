@@ -6,5 +6,8 @@ import java.util.List;
 
 public interface IArtistService {
     List<ArtistDTO> get();
+
+    ArtistDTO get(int id);
+
     boolean exist(int id);
 }

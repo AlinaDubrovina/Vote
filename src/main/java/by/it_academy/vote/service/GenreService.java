@@ -12,6 +12,12 @@ public class GenreService implements IGenreService {
     public GenreService(IGenreDAO dao) {
         this.dao = dao;
     }
+
+    @Override
+    public GenreDTO get(int id) {
+        return this.dao.get(id);
+    }
+
     @Override
     public List<GenreDTO> get() {
         return dao.get();
@@ -19,13 +25,6 @@ public class GenreService implements IGenreService {
 
     @Override
     public boolean exist(int id) {
-        List<GenreDTO> genreDTOS = this.dao.get();
-        for (GenreDTO genreDTO : genreDTOS){
-            if (id == genreDTO.getId()){
-                return true;
-
-            }
-        }
-        return false;
+        return this.dao.exist(id);
     }
 }

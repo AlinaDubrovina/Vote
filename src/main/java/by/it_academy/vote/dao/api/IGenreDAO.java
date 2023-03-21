@@ -6,5 +6,8 @@ import java.util.List;
 
 public interface IGenreDAO {
     List<GenreDTO> get();
+
+    GenreDTO get(int id);
+
     boolean exist(int id);
 }

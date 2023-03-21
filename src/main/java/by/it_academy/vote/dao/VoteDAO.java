@@ -12,4 +12,9 @@ public class VoteDAO implements IVoteDAO {
     public void save(SavedVoteDTO vote) {
         this.savedVoteDTOS.add(vote);
     }
+
+    @Override
+    public List<SavedVoteDTO> get() {
+        return this.savedVoteDTOS;
+    }
 }

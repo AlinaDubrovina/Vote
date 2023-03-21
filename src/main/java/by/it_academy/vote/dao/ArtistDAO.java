@@ -27,6 +27,11 @@ public class ArtistDAO implements IArtistDAO {
     }
 
     @Override
+    public ArtistDTO get(int id) {
+        return this.artists.get(id);
+    }
+
+    @Override
     public List<ArtistDTO> get() {
         return new ArrayList<>(artists.values());
     }
