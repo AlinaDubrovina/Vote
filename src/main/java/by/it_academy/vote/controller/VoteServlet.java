@@ -54,6 +54,9 @@ public class VoteServlet extends HttpServlet {
                 .setAbout(about)
                 .build();
         this.voteService.save(vote);
+
+        String contextPath = req.getContextPath();
+        resp.sendRedirect(contextPath + "/statistics");
     }
 }
 
