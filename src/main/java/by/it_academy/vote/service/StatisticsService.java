@@ -36,7 +36,7 @@ public class StatisticsService implements IStatisticsService {
 
 
         for(SavedVoteDTO savedVoteDTO : voteService.get()){
-            int[] artists = savedVoteDTO.getVote().getGenres();
+            int[] artists = new int[]{savedVoteDTO.getVote().getArtist()};
 
             for (ResultRow<ArtistDTO> artistDTOResultRow : top) {
                 for (int artist : artists) {
