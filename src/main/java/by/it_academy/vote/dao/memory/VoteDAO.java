@@ -1,4 +1,4 @@
-package by.it_academy.vote.dao;
+package by.it_academy.vote.dao.memory;
 
 import by.it_academy.vote.core.dto.SavedVoteDTO;
 import by.it_academy.vote.dao.api.IVoteDAO;
