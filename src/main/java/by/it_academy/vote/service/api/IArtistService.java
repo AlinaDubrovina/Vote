@@ -5,9 +5,15 @@ import by.it_academy.vote.core.dto.ArtistDTO;
 import java.util.List;
 
 public interface IArtistService {
-    List<ArtistDTO> get();
+    List<ArtistDTO> getContent();
 
-    ArtistDTO get(int id);
+    void create(ArtistDTO artistDTO);
+
+    void update(ArtistDTO artistDTO);
+
+    boolean delete(int id);
 
     boolean exist(int id);
+
+    List<ArtistDTO> getArtists();
 }

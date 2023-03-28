@@ -4,10 +4,8 @@ import by.it_academy.vote.core.dto.ArtistDTO;
 
 import java.util.List;
 
-public interface IArtistDAO {
-    List<ArtistDTO> get();
-
-    ArtistDTO get(int id);
-
+public interface IArtistDAO extends IDAO<ArtistDTO>{
     boolean exist(int id);
+
+    void update(ArtistDTO artistDTO);
 }

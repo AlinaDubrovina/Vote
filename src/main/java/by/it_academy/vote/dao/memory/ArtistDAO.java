@@ -1,4 +1,4 @@
-package by.it_academy.vote.dao;
+package by.it_academy.vote.dao.memory;
 
 import by.it_academy.vote.core.dto.ArtistDTO;
 import by.it_academy.vote.dao.api.IArtistDAO;
@@ -14,6 +14,7 @@ public class ArtistDAO implements IArtistDAO {
     public ArtistDAO(Map<Integer, ArtistDTO> artists) {
         this.artists = artists;
     }
+    private int idCounter = 1;
 
     public ArtistDAO() {
         this.artists.put(1, new ArtistDTO(1, "Selena Gomez"));
@@ -27,17 +28,34 @@ public class ArtistDAO implements IArtistDAO {
     }
 
     @Override
-    public ArtistDTO get(int id) {
-        return this.artists.get(id);
+    public void create(ArtistDTO artistDTO) {
+        ArtistDTO bufferedDTO = new ArtistDTO(createId(), artistDTO.getName());
+        artists.put(bufferedDTO.getId(), bufferedDTO);
     }
 
     @Override
-    public List<ArtistDTO> get() {
+    public List<ArtistDTO> readAll() {
         return new ArrayList<>(artists.values());
     }
 
     @Override
+    public void update(ArtistDTO artistDTO) {
+        artists.put(artistDTO.getId(), artistDTO);
+    }
+
+    @Override
+    public boolean delete(int id) {
+        artists.remove(id);
+        return true;
+    }
+
+    @Override
     public boolean exist(int id) {
-        return this.artists.get(id) != null;
+        return artists.get(id) != null;
+    }
+
+    private int createId() {
+        idCounter++;
+        return idCounter;
     }
 }

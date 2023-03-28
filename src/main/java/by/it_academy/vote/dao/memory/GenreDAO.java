@@ -1,4 +1,4 @@
-package by.it_academy.vote.dao;
+package by.it_academy.vote.dao.memory;
 
 import by.it_academy.vote.core.dto.GenreDTO;
 import by.it_academy.vote.dao.api.IGenreDAO;
@@ -14,6 +14,7 @@ public class GenreDAO implements IGenreDAO {
     public GenreDAO(Map<Integer, GenreDTO> genres) {
         this.genres = genres;
     }
+    private int idCounter = 1;
 
     public GenreDAO() {
         this.genres.put(1, new GenreDTO(1, "Rock"));
@@ -26,18 +27,36 @@ public class GenreDAO implements IGenreDAO {
     }
 
     @Override
-    public GenreDTO get(int id) {
-        return this.genres.get(id);
+    public boolean exist(int id) {
+        return this.genres.get(id) != null;
     }
 
     @Override
-    public List<GenreDTO> get() {
+    public void update(GenreDTO genreDTO) {
+        genres.put(genreDTO.getId(), genreDTO);
+    }
+
+    @Override
+    public void create(GenreDTO genreDTO) {
+        GenreDTO bufferedDTO = new GenreDTO(createId(), genreDTO.getName());
+        genres.put(bufferedDTO.getId(), bufferedDTO);
+    }
+
+
+    @Override
+    public List<GenreDTO> readAll() {
         return new ArrayList<>(genres.values());
     }
 
     @Override
-    public boolean exist(int id) {
-        return this.genres.get(id) != null;
+    public boolean delete(int id) {
+        genres.remove(id);
+        return true;
+    }
+
+    private int createId() {
+        idCounter++;
+        return idCounter;
     }
 }
 
