@@ -1,6 +1,6 @@
 package by.it_academy.vote.dao.fabrics;
 
-import by.it_academy.vote.dao.ArtistDAO;
+import by.it_academy.vote.dao.memory.ArtistDAO;
 import by.it_academy.vote.dao.api.IArtistDAO;
 import by.it_academy.vote.service.fabrics.VoteServiceSingleton;
 
