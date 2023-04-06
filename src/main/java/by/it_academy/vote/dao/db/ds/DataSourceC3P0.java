@@ -13,7 +13,7 @@ public class DataSourceC3P0 implements IDataSourceWrapper {
     private static final String URL_PROPERTY_NAME = "db.url";
     private static final String USER_PROPERTY_NAME = "db.user";
     private static final String PASSWORD_PROPERTY_NAME = "db.password";
-    private ComboPooledDataSource dataSource;
+    private final ComboPooledDataSource dataSource;
 
     public DataSourceC3P0(Properties properties) throws PropertyVetoException {
         this.dataSource = new ComboPooledDataSource();

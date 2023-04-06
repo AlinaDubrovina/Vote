@@ -1,4 +1,4 @@
-package by.it_academy.vote.dao.fabrics;
+package by.it_academy.vote.dao.memory.fabrics;
 
 import by.it_academy.vote.dao.memory.GenreDAO;
 import by.it_academy.vote.dao.api.IGenreDAO;

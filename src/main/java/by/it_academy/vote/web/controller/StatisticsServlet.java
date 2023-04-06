@@ -1,4 +1,4 @@
-package by.it_academy.vote.controller;
+package by.it_academy.vote.web.controller;
 
 import by.it_academy.vote.core.dto.*;
 import by.it_academy.vote.service.api.IStatisticsService;
@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.beans.PropertyVetoException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.List;
 public class StatisticsServlet extends HttpServlet {
     private IStatisticsService statisticsService;
 
-    public StatisticsServlet() {
+    public StatisticsServlet() throws PropertyVetoException {
         this.statisticsService = StatisticsServiceSingleton.getInstance();
     }
 

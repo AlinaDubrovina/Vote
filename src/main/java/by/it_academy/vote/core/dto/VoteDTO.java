@@ -8,7 +8,7 @@ public class VoteDTO {
     private int[] genres;
     private String about;
 
-    private VoteDTO(int artist, int[] genres, String about) {
+    public VoteDTO(int artist, int[] genres, String about) {
         this.artist = artist;
         this.genres = genres;
         this.about = about;

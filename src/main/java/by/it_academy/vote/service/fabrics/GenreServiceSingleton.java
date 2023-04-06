@@ -1,6 +1,7 @@
 package by.it_academy.vote.service.fabrics;
 
-import by.it_academy.vote.dao.fabrics.GenreDAOSingleton;
+import by.it_academy.vote.dao.memory.fabrics.GenreDAOSingleton;
+import by.it_academy.vote.dao.provider.ChoiceDaoProvider;
 import by.it_academy.vote.service.GenreService;
 import by.it_academy.vote.service.api.IGenreService;
 
@@ -14,7 +15,7 @@ public class GenreServiceSingleton {
         if (instance == null) {
             synchronized (VoteServiceSingleton.class){
                 if (instance == null) {
-                    instance = new GenreService(GenreDAOSingleton.getInstance());
+                    instance = new GenreService(ChoiceDaoProvider.getInstance().genreDAO());
 
                 }
             }

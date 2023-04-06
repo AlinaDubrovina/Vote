@@ -30,7 +30,7 @@ public class StatisticsService implements IStatisticsService {
 
     @Override
     public List<ResultRow<ArtistDTO>> getTopArtist() {
-        List<ResultRow<ArtistDTO>> top = this.artistService.get().stream()
+        List<ResultRow<ArtistDTO>> top = this.artistService.getArtists().stream()
                 .map(ResultRow::new)
                 .collect(Collectors.toList());
 
@@ -53,7 +53,7 @@ public class StatisticsService implements IStatisticsService {
 
     @Override
     public List<ResultRow<GenreDTO>> getTopGenre() {
-        List<ResultRow<GenreDTO>> top = this.genreService.get().stream()
+        List<ResultRow<GenreDTO>> top = this.genreService.getGenres().stream()
                 .map(ResultRow::new)
                 .collect(Collectors.toList());
 

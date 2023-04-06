@@ -22,7 +22,7 @@ public class ArtistDaoDB implements IArtistDAO {
     public void create(ArtistDTO artistDTO) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
-                     "INSERT INTO  app.artist (name) VALUES (?);")) {
+                     "INSERT INTO  app.artists (name) VALUES (?);")) {
             preparedStatement.setString(1, artistDTO.getName());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -33,29 +33,25 @@ public class ArtistDaoDB implements IArtistDAO {
 
     @Override
     public List<ArtistDTO> readAll() {
-        List<ArtistDTO> artists = new ArrayList<>();
-        try (Connection conn = this.dataSource.getConnection();
-             PreparedStatement preparedStatement = conn.prepareStatement("SELECT id, name FROM app.artist;")
-        ){
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()){
-                int id = resultSet.getInt("id");
-                String name = resultSet.getString("name");
-
-                artists.add(new ArtistDTO(id, name));
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement preparedStatement = conn.prepareStatement("SELECT id, name FROM app.artists");
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+            List<ArtistDTO> artistsList = new ArrayList<>();
+            while (resultSet.next()) {
+                ArtistDTO artistDTO = buildArtistDto(resultSet);
+                artistsList.add(artistDTO);
             }
-
+            return artistsList;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("SQLException readAll method :" + e);
         }
-        return artists;
     }
 
     @Override
     public boolean delete(int id) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
-                     "DELETE from app.artist where id=?;")) {
+                     "DELETE from app.artists where id=?;")) {
             preparedStatement.setInt(1, id);
             int affectedRows = preparedStatement.executeUpdate();
             return affectedRows != 0;
@@ -68,7 +64,7 @@ public class ArtistDaoDB implements IArtistDAO {
     public void update(ArtistDTO artistDTO) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
-                     "UPDATE app.artist SET name = ? WHERE id=?;")) {
+                     "UPDATE app.artists SET name = ? WHERE id=?;")) {
             int id = artistDTO.getId();
             String name = artistDTO.getName();
             preparedStatement.setString(1, name);
@@ -82,13 +78,19 @@ public class ArtistDaoDB implements IArtistDAO {
     @Override
     public boolean exist(int id) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM app.genres WHERE id = ?);")){
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM app.artists WHERE id = ?);")){
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             return resultSet.next();
         } catch (SQLException e) {
             throw new RuntimeException();
         }
+    }
+
+    protected ArtistDTO buildArtistDto(ResultSet resultSet) throws SQLException {
+        int id = resultSet.getInt("id");
+        String name = resultSet.getString("name");
+        return new ArtistDTO(id, name);
     }
 }
 

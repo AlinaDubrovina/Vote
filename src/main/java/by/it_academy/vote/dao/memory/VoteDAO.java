@@ -8,6 +8,7 @@ import java.util.List;
 
 public class VoteDAO implements IVoteDAO {
     private List<SavedVoteDTO> savedVoteDTOS = new ArrayList<>();
+
     @Override
     public void save(SavedVoteDTO vote) {
         this.savedVoteDTOS.add(vote);
@@ -16,5 +17,20 @@ public class VoteDAO implements IVoteDAO {
     @Override
     public List<SavedVoteDTO> get() {
         return this.savedVoteDTOS;
+    }
+
+    @Override
+    public void create(SavedVoteDTO vote) {
+        this.savedVoteDTOS.add(vote);
+    }
+
+    @Override
+    public List<SavedVoteDTO> readAll() {
+        return this.savedVoteDTOS;
+    }
+
+    @Override
+    public boolean delete(int id) {
+        return false;
     }
 }

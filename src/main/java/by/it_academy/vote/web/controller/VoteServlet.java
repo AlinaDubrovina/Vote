@@ -1,4 +1,4 @@
-package by.it_academy.vote.controller;
+package by.it_academy.vote.web.controller;
 
 import by.it_academy.vote.core.dto.VoteDTO;
 import by.it_academy.vote.service.api.IVoteService;
@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.beans.PropertyVetoException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
@@ -20,7 +21,7 @@ public class VoteServlet extends HttpServlet {
     private final String ABOUT_NAME_PARAMETER = "about";
     private final IVoteService voteService;
 
-    public VoteServlet() {
+    public VoteServlet() throws PropertyVetoException {
         this.voteService = VoteServiceSingleton.getInstance();
     }
 
