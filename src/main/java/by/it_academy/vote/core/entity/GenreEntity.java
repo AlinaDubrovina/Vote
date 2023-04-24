@@ -1,14 +1,30 @@
-package by.it_academy.vote.core.dto;
+package by.it_academy.vote.core.entity;
 
+import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
 import java.util.Objects;
 
-public class ArtistDTO {
+@Entity
+@Table(name = "genres", schema = "app")
+public class GenreEntity {
+    @Id
+    @GeneratedValue(generator="increment")
+    @GenericGenerator(name="increment", strategy = "increment")
     private Long id;
+    @Column(name = "name")
     private String name;
 
-    public ArtistDTO(Long id, String name) {
+    public GenreEntity(String name) {
+        this.name = name;
+    }
+
+    public GenreEntity(Long id, String name) {
         this.id = id;
         this.name = name;
+    }
+
+    public GenreEntity() {
     }
 
     public Long getId() {
@@ -31,8 +47,8 @@ public class ArtistDTO {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ArtistDTO artistDTO = (ArtistDTO) o;
-        return Objects.equals(id, artistDTO.id) && Objects.equals(name, artistDTO.name);
+        GenreEntity that = (GenreEntity) o;
+        return id == that.id && Objects.equals(name, that.name);
     }
 
     @Override
@@ -42,7 +58,7 @@ public class ArtistDTO {
 
     @Override
     public String toString() {
-        return "ArtistDTO{" +
+        return "GenreEntity{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';

@@ -3,19 +3,19 @@ package by.it_academy.vote.core.dto;
 import java.util.Objects;
 
 public class GenreDTO {
-    private int id;
+    private Long id;
     private String name;
 
-    public GenreDTO(int id, String name) {
+    public GenreDTO(Long id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -32,7 +32,7 @@ public class GenreDTO {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         GenreDTO genreDTO = (GenreDTO) o;
-        return id == genreDTO.id && Objects.equals(name, genreDTO.name);
+        return Objects.equals(id, genreDTO.id) && Objects.equals(name, genreDTO.name);
     }
 
     @Override
@@ -48,4 +48,3 @@ public class GenreDTO {
                 '}';
     }
 }
-

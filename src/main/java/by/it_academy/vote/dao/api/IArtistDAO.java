@@ -1,11 +1,6 @@
 package by.it_academy.vote.dao.api;
 
-import by.it_academy.vote.core.dto.ArtistDTO;
+import by.it_academy.vote.core.entity.ArtistEntity;
 
-import java.util.List;
-
-public interface IArtistDAO extends IDAO<ArtistDTO>{
-    boolean exist(int id);
-
-    void update(ArtistDTO artistDTO);
+public interface IArtistDAO extends IDAO<ArtistEntity>{
 }

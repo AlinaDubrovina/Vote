@@ -1,5 +1,7 @@
 package by.it_academy.vote.dao.api;
 
+import by.it_academy.vote.core.entity.ArtistEntity;
+
 import java.util.List;
 
 public interface IDAO<T > {
@@ -7,5 +9,6 @@ public interface IDAO<T > {
 
     List<T> readAll();
 
-    boolean delete(int id);
+    void delete(Long id);
+    void update(T t);
 }

@@ -2,9 +2,7 @@ package by.it_academy.vote.dao.db.fabrics;
 
 import by.it_academy.vote.dao.api.IGenreDAO;
 import by.it_academy.vote.dao.db.GenreDaoDB;
-import by.it_academy.vote.dao.db.ds.fabrics.DataSourceSingleton;
-
-import java.beans.PropertyVetoException;
+import by.it_academy.vote.dao.entity_manager.EntityManagerSingleton;
 
 public class GenreDaoDBSingleton {
     private volatile static GenreDaoDB instance;
@@ -12,12 +10,11 @@ public class GenreDaoDBSingleton {
     private GenreDaoDBSingleton() {
     }
 
-    public static IGenreDAO getInstance() throws PropertyVetoException {
+    public static IGenreDAO getInstance(){
         if (instance == null) {
             synchronized (GenreDaoDBSingleton.class){
                 if (instance == null) {
-                    instance = new GenreDaoDB(DataSourceSingleton.getInstance());
-
+                    instance = new GenreDaoDB(EntityManagerSingleton.getEntityManagerFactory());
                 }
             }
         }
