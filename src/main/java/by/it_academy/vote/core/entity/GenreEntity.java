@@ -1,7 +1,5 @@
 package by.it_academy.vote.core.entity;
 
-import org.hibernate.annotations.GenericGenerator;
-
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -9,8 +7,8 @@ import java.util.Objects;
 @Table(name = "genres", schema = "app")
 public class GenreEntity {
     @Id
-    @GeneratedValue(generator="increment")
-    @GenericGenerator(name="increment", strategy = "increment")
+    @GeneratedValue(generator = "genre_seq",strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name ="genre_seq",sequenceName = "genres_id_seq",schema = "app",allocationSize = 1)
     private Long id;
     @Column(name = "name")
     private String name;
