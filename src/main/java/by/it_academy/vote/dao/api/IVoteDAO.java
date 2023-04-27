@@ -1,7 +1,12 @@
 package by.it_academy.vote.dao.api;
 
-import by.it_academy.vote.core.entity.VoteEntity;
+import by.it_academy.vote.core.dto.SavedVoteDTO;
+import by.it_academy.vote.core.dto.VoteDTO;
 
+import java.util.List;
 
-public interface IVoteDAO extends IDAO<VoteEntity>{
+public interface IVoteDAO{
+    List<SavedVoteDTO> getAll();
+
+    void save(SavedVoteDTO votes);
 }

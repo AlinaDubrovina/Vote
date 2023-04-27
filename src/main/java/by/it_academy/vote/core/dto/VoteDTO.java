@@ -1,25 +1,25 @@
 package by.it_academy.vote.core.dto;
 
-import java.util.Arrays;
-import java.util.Objects;
+import java.util.Collections;
+import java.util.List;
 
 public class VoteDTO {
-    private int artist;
-    private int[] genres;
-    private String about;
+    private final Long artistId;
+    private final List<Long> genreIds;
+    private final String about;
 
-    public VoteDTO(int artist, int[] genres, String about) {
-        this.artist = artist;
-        this.genres = genres;
+    public VoteDTO(Long artistId, List<Long> genreIds, String about) {
+        this.artistId = artistId;
+        this.genreIds = genreIds;
         this.about = about;
     }
 
-    public int getArtist() {
-        return artist;
+    public long getArtistId() {
+        return artistId;
     }
 
-    public int[] getGenres() {
-        return genres;
+    public List<Long> getGenreIds() {
+        return Collections.unmodifiableList(genreIds);
     }
 
     public String getAbout() {
@@ -27,57 +27,11 @@ public class VoteDTO {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        VoteDTO voteDTO = (VoteDTO) o;
-        return Objects.equals(artist, voteDTO.artist) && Arrays.equals(genres, voteDTO.genres) && Objects.equals(about, voteDTO.about);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = Objects.hash(artist, about);
-        result = 31 * result + Arrays.hashCode(genres);
-        return result;
-    }
-
-    @Override
     public String toString() {
         return "VoteDTO{" +
-                "artist='" + artist + '\'' +
-                ", genres=" + Arrays.toString(genres) +
+                ", artistId=" + artistId +
+                ", genreIds=" + genreIds +
                 ", about='" + about + '\'' +
                 '}';
-    }
-
-    public static class VoteDTOBuilder{
-        private int artist;
-        private int[] genres = new int[0];
-        private String about;
-
-        private VoteDTOBuilder(){}
-
-        public static VoteDTOBuilder create(){
-            return new VoteDTOBuilder();
-        }
-
-        public VoteDTOBuilder setArtist(int artist) {
-            this.artist = artist;
-            return this;
-        }
-
-        public VoteDTOBuilder setGenres(int[] genres) {
-            this.genres = genres;
-            return this;
-        }
-
-        public VoteDTOBuilder setAbout(String about) {
-            this.about = about;
-            return this;
-        }
-
-        public VoteDTO build() {
-            return new VoteDTO(artist, genres, about);
-        }
     }
 }

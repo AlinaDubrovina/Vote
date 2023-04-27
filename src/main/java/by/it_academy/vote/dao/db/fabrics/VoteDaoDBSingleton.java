@@ -2,9 +2,9 @@ package by.it_academy.vote.dao.db.fabrics;
 
 import by.it_academy.vote.dao.api.IVoteDAO;
 import by.it_academy.vote.dao.db.VoteDaoDB;
-import by.it_academy.vote.dao.db.ds.fabrics.DataSourceSingleton;
+import by.it_academy.vote.dao.entity_manager.EntityManagerSingleton;
 
-import java.beans.PropertyVetoException;
+import javax.persistence.EntityManagerFactory;
 
 public class VoteDaoDBSingleton {
     private volatile static IVoteDAO instance;
@@ -12,11 +12,11 @@ public class VoteDaoDBSingleton {
     private VoteDaoDBSingleton() {
     }
 
-    public static IVoteDAO getInstance() throws PropertyVetoException {
+    public static IVoteDAO getInstance(){
         if(instance == null){
             synchronized (VoteDaoDBSingleton.class){
                 if(instance == null){
-                    instance = new VoteDaoDB(DataSourceSingleton.getInstance());
+                    instance = new VoteDaoDB(EntityManagerSingleton.getEntityManagerFactory());
                 }
             }
         }

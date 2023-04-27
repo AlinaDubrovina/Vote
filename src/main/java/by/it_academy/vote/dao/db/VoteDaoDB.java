@@ -2,103 +2,102 @@ package by.it_academy.vote.dao.db;
 
 import by.it_academy.vote.core.dto.SavedVoteDTO;
 import by.it_academy.vote.core.dto.VoteDTO;
+import by.it_academy.vote.core.entity.ArtistEntity;
+import by.it_academy.vote.core.entity.GenreEntity;
+import by.it_academy.vote.core.entity.VoteEntity;
 import by.it_academy.vote.dao.api.IVoteDAO;
-import by.it_academy.vote.dao.db.ds.api.IDataSourceWrapper;
 
-import java.sql.*;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class VoteDaoDB implements IVoteDAO {
-    private final IDataSourceWrapper dataSource;
+    private final EntityManagerFactory entityManagerFactory;
 
-    public VoteDaoDB(IDataSourceWrapper dataSource) {
-        this.dataSource = dataSource;
+    public VoteDaoDB(EntityManagerFactory entityManagerFactory) {
+        this.entityManagerFactory = entityManagerFactory;
     }
 
     @Override
-    public void create(SavedVoteDTO savedVoteDTO) {
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(
-                     "INSERT INTO  app.votes (dt_create ,about) VALUES (?,?);", Statement.RETURN_GENERATED_KEYS)) {
-            Timestamp timestamp = Timestamp.valueOf(savedVoteDTO.getDtCreate());
-            preparedStatement.setTimestamp(1,timestamp);
-            preparedStatement.setString(2, savedVoteDTO.getVote().getAbout());
-            preparedStatement.executeUpdate();
-            try (ResultSet resultSet = preparedStatement.getGeneratedKeys()) {
-                resultSet.next();
+    public List<SavedVoteDTO> getAll() {
+        List<SavedVoteDTO> savedVoteDTOs;
+        List<VoteEntity> voteEntities;
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+            entityManager.getTransaction().begin();
+            entityManager.createNativeQuery("SET TRANSACTION READ ONLY;").executeUpdate();
+
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<VoteEntity> voteQuery = cb.createQuery(VoteEntity.class);
+
+            Root<VoteEntity> from = voteQuery.from(VoteEntity.class);
+            CriteriaQuery<VoteEntity> finalVoteQuery = voteQuery.select(from);
+
+            voteEntities = entityManager.createQuery(finalVoteQuery)
+                    .getResultList();
+            savedVoteDTOs = voteEntities
+                    .stream()
+                    .map(vote -> new SavedVoteDTO(new VoteDTO(
+                            vote.getArtistId().getId(),
+                            vote.getGenreIds().stream().map(GenreEntity::getId).collect(Collectors.toList()),
+                            vote.getAbout()),
+                            vote.getDtCreate()))
+                    .collect(Collectors.toList());
+            entityManager.getTransaction().commit();
+        } catch (Exception e) {
+            if (entityManager != null && entityManager.getTransaction().isActive()) {
+                entityManager.getTransaction().rollback();
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("SQLException create method :" + e);
-        }
-    }
-
-    @Override
-    public List<SavedVoteDTO> readAll() {
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("SELECT id,date_time,about from app.votes");
-             ResultSet resultSet = preparedStatement.executeQuery()) {
-            List <SavedVoteDTO> savedVoteDTOList = new ArrayList<>();
-            while (resultSet.next()) {
-                LocalDateTime dt = resultSet.getTimestamp("dt_create").toLocalDateTime();
-                String about = resultSet.getString("about");
-                VoteDTO voteDTO = new VoteDTO(0, null, about);
-                SavedVoteDTO savedVoteDTO = new SavedVoteDTO(dt, voteDTO);
-                savedVoteDTOList.add(savedVoteDTO);
+            throw e;
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
             }
-            return savedVoteDTOList;
-        } catch (SQLException e) {
-            throw new RuntimeException("SQLException readAll method :" + e);
         }
-    }
 
-    @Override
-    public boolean delete(int id) {
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(
-                     "DELETE from data.genres where id=?")) {
-            preparedStatement.setInt(1, id);
-            int affectedRows = preparedStatement.executeUpdate();
-            return affectedRows != 0;
-        } catch (SQLException e) {
-            throw new RuntimeException("SQLException delete method :" + e);
-        }
+        return savedVoteDTOs;
     }
-
     @Override
     public void save(SavedVoteDTO vote) {
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(
-                     "INSERT INTO  app.votes (dt_create ,about) VALUES (?,?);", Statement.RETURN_GENERATED_KEYS)) {
-            Timestamp timestamp = Timestamp.valueOf(vote.getDtCreate());
-            preparedStatement.setTimestamp(1,timestamp);
-            preparedStatement.setString(2, vote.getVote().getAbout());
-            preparedStatement.executeUpdate();
-            try (ResultSet resultSet = preparedStatement.getGeneratedKeys()) {
-                resultSet.next();
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("SQLException save method :" + e);
-        }
-    }
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        List<GenreEntity> genres;
+        try {
 
-    @Override
-    public List<SavedVoteDTO> get() {
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("SELECT id,date_time,about from app.votes");
-             ResultSet resultSet = preparedStatement.executeQuery()) {
-            List <SavedVoteDTO> savedVoteDTOList = new ArrayList<>();
-            while (resultSet.next()) {
-                LocalDateTime dt = resultSet.getTimestamp("dt_create").toLocalDateTime();
-                String about = resultSet.getString("about");
-                VoteDTO voteDTO = new VoteDTO(0, null, about);
-                SavedVoteDTO savedVoteDTO = new SavedVoteDTO(dt, voteDTO);
-                savedVoteDTOList.add(savedVoteDTO);
+            entityManager.getTransaction().begin();
+
+            ArtistEntity artistEntity = entityManager.find(ArtistEntity.class,
+                    vote.getVoteDTO().getArtistId());
+            System.out.println(artistEntity.getId());
+
+            List<Long> genreIds = vote.getVoteDTO().getGenreIds();
+
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<GenreEntity> genreQuery = cb.createQuery(GenreEntity.class);
+
+            Root<GenreEntity> fromGenres = genreQuery.from(GenreEntity.class);
+            CriteriaQuery<GenreEntity> finalGenreQuery = genreQuery.select(fromGenres)
+                    .where(fromGenres.in(genreIds));
+
+            genres = entityManager.createQuery(finalGenreQuery).getResultList();
+
+            VoteEntity voteEntity = new VoteEntity(artistEntity, genres, vote.getVoteDTO().getAbout(),
+                    vote.getDtCreate());
+            entityManager.persist(voteEntity);
+
+            entityManager.getTransaction().commit();
+        } catch (Exception e) {
+            if (entityManager != null && entityManager.getTransaction().isActive()) {
+                entityManager.getTransaction().rollback();
             }
-            return savedVoteDTOList;
-        } catch (SQLException e) {
-            throw new RuntimeException("SQLException get method :" + e);
+            throw e;
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
         }
     }
 }
