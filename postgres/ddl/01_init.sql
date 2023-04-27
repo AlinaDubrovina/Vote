@@ -18,45 +18,26 @@ CREATE TABLE IF NOT EXISTS app.genres
     CONSTRAINT genres_pkey PRIMARY KEY (id)
 )
 
-ALTER TABLE IF EXISTS app.genres
-    OWNER to postgres;
-
 CREATE TABLE IF NOT EXISTS app.votes
 (
-    id bigint NOT NULL,
-    artist bigint NOT NULL,
-    genre_1 bigint NOT NULL,
-    genre_2 bigint NOT NULL,
-    genre_3 bigint NOT NULL,
-    genre_4 bigint NOT NULL,
-    genre_5 bigint NOT NULL,
+    id bigint NOT NULL DEFAULT nextval('app.votes_id_seq'::regclass),
+    artist_id bigint NOT NULL DEFAULT nextval('app.votes_artist_id_seq'::regclass),
     about text NOT NULL,
-    CONSTRAINT votes_pkey PRIMARY KEY (id),
-    CONSTRAINT artist FOREIGN KEY (artist)
+    dt_create timestamp without time zone NOT NULL,
+    CONSTRAINT votes_id PRIMARY KEY (id),
+    CONSTRAINT fk_artist_id FOREIGN KEY (artist_id)
         REFERENCES app.artists (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION,
-    CONSTRAINT genre_1 FOREIGN KEY (genre_1)
-        REFERENCES app.genres (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION,
-    CONSTRAINT genre_2 FOREIGN KEY (genre_2)
-        REFERENCES app.genres (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION,
-    CONSTRAINT genre_3 FOREIGN KEY (genre_3)
-        REFERENCES app.genres (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION,
-    CONSTRAINT genre_4 FOREIGN KEY (genre_4)
-        REFERENCES app.genres (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION,
-    CONSTRAINT genre_5 FOREIGN KEY (genre_5)
-        REFERENCES app.genres (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
 )
 
-ALTER TABLE IF EXISTS app.votes
-    OWNER to postgres;
+CREATE TABLE IF NOT EXISTS app.votes_genres
+(
+    vote_id bigint NOT NULL DEFAULT nextval('app.votes_genres_vote_id_seq'::regclass),
+    genre_id bigint NOT NULL DEFAULT nextval('app.votes_genres_genre_id_seq'::regclass),
+    CONSTRAINT fk_genre_id FOREIGN KEY (genre_id)
+        REFERENCES app.genres (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+)
+
