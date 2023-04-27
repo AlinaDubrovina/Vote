@@ -8,7 +8,6 @@
         <class>by.it_academy.vote.core.entity.ArtistEntity</class>
         <class>by.it_academy.vote.core.entity.GenreEntity</class>
         <class>by.it_academy.vote.core.entity.VoteEntity</class>
-        <class>by.it_academy.vote.core.entity.SavedVoteEntity</class>
 
         <properties>
             <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver" />
