@@ -38,6 +38,11 @@ public class ArtistService implements IArtistService {
     }
 
     @Override
+    public ArtistDTO get(Long id) {
+        return artistDAO.get(id);
+    }
+
+    @Override
     public void delete(Long id) {
         artistDAO.delete(id);
     }

@@ -32,6 +32,11 @@ public class GenreService implements IGenreService {
     }
 
     @Override
+    public GenreDTO get(Long id) {
+        return genreDAO.get(id);
+    }
+
+    @Override
     public void update(GenreDTO genreDTO){
         GenreEntity genre = mapDTOtoEntity(genreDTO);
         genreDAO.update(genre);

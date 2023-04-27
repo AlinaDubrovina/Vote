@@ -1,5 +1,6 @@
 package by.it_academy.vote.dao.db;
 
+import by.it_academy.vote.core.dto.GenreDTO;
 import by.it_academy.vote.core.entity.GenreEntity;
 import by.it_academy.vote.dao.api.IGenreDAO;
 
@@ -27,6 +28,31 @@ public class GenreDaoDB implements IGenreDAO{
         } finally {
             genreEntityManager.close();
         }
+    }
+
+    @Override
+    public GenreDTO get(Long id) {
+        EntityManager genreEntityManager = entityManagerFactory.createEntityManager();
+        GenreDTO genreDTO;
+        try {
+            genreEntityManager.getTransaction().begin();
+            genreEntityManager.createNativeQuery("SET TRANSACTION READ ONLY;").executeUpdate();
+
+            GenreEntity genreEntity= genreEntityManager.find(GenreEntity.class, id);
+            genreDTO = new GenreDTO(genreEntity);
+
+            genreEntityManager.getTransaction().commit();
+        } catch (Exception e) {
+            if (genreEntityManager != null && genreEntityManager.getTransaction().isActive()) {
+                genreEntityManager.getTransaction().rollback();
+            }
+            throw e;
+        } finally {
+            if (genreEntityManager != null) {
+                genreEntityManager.close();
+            }
+        }
+        return genreDTO;
     }
 
     @Override
