@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS app.votes
         ON DELETE CASCADE
 )
 
+
 CREATE TABLE IF NOT EXISTS app.votes_genres
 (
     vote_id bigint NOT NULL DEFAULT nextval('app.votes_genres_vote_id_seq'::regclass),
