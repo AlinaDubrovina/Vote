@@ -1,5 +1,8 @@
 package by.it_academy.vote.core.dto;
 
+import by.it_academy.vote.core.entity.ArtistEntity;
+import by.it_academy.vote.core.entity.GenreEntity;
+
 import java.util.Objects;
 
 public class GenreDTO {
@@ -9,6 +12,11 @@ public class GenreDTO {
     public GenreDTO(Long id, String name) {
         this.id = id;
         this.name = name;
+    }
+
+    public GenreDTO(GenreEntity genreEntity) {
+        this.id = genreEntity.getId();
+        this.name = genreEntity.getName();
     }
 
     public Long getId() {

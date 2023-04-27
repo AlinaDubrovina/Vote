@@ -1,5 +1,7 @@
 package by.it_academy.vote.core.dto;
 
+import by.it_academy.vote.core.entity.ArtistEntity;
+
 import java.util.Objects;
 
 public class ArtistDTO {
@@ -9,6 +11,11 @@ public class ArtistDTO {
     public ArtistDTO(Long id, String name) {
         this.id = id;
         this.name = name;
+    }
+
+    public ArtistDTO(ArtistEntity artistEntity) {
+        this.id = artistEntity.getId();
+        this.name = artistEntity.getName();
     }
 
     public Long getId() {
