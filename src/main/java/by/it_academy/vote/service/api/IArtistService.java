@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface IArtistService extends IService<ArtistDTO> {
     List<ArtistEntity> readAll();
+    ArtistDTO get(Long id);
 }
