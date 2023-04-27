@@ -1,84 +1,102 @@
 package by.it_academy.vote.service;
 
 import by.it_academy.vote.core.dto.*;
+import by.it_academy.vote.core.entity.ArtistEntity;
+import by.it_academy.vote.core.entity.GenreEntity;
 import by.it_academy.vote.service.api.IArtistService;
 import by.it_academy.vote.service.api.IGenreService;
 import by.it_academy.vote.service.api.IStatisticsService;
 import by.it_academy.vote.service.api.IVoteService;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class StatisticsService implements IStatisticsService {
-    private IVoteService voteService;
-    private IArtistService artistService;
-    private IGenreService genreService;
 
-    public StatisticsService(IVoteService voteService, IArtistService artistService, IGenreService genreService) {
+    private final IVoteService voteService;
+    private final IGenreService genreService;
+    private final IArtistService artistService;
+
+    public StatisticsService(IVoteService voteService,
+                             IGenreService genreService,
+                             IArtistService artistService) {
         this.voteService = voteService;
-        this.artistService = artistService;
         this.genreService = genreService;
-    }
-
-
-    @Override
-    public ResultDTO getResult() {
-        return new ResultDTO(getTopArtist(), getTopGenre(), getAboutRows());
+        this.artistService = artistService;
     }
 
     @Override
-    public List<ResultRow<ArtistDTO>> getTopArtist() {
-        List<ResultRow<ArtistDTO>> top = this.artistService.getArtists().stream()
-                .map(ResultRow::new)
-                .collect(Collectors.toList());
+    public Map<ArtistDTO, Long> getBestArtists() {
+        final Map<Long, Long> artistVotes = artistService.readAll()
+                .stream()
+                .collect(Collectors.toMap(ArtistEntity::getId, artist -> 0L));
+        voteService.getVotes()
+                .stream()
+                .map(SavedVoteDTO::getVoteDTO)
+                .map(VoteDTO::getArtistId)
+                .forEach(artistId -> artistVotes.put(
+                        artistId,
+                        artistVotes.get(artistId) + 1L));
+        return sortArtistsByVotes(artistVotes);
+    }
 
-
-        for(SavedVoteDTO savedVoteDTO : voteService.get()){
-            int[] artists = new int[]{savedVoteDTO.getVote().getArtist()};
-
-            for (ResultRow<ArtistDTO> artistDTOResultRow : top) {
-                for (int artist : artists) {
-                    if (artistDTOResultRow.getItem().getId() == artist) {
-                        artistDTOResultRow.inc();
-                        break;
-                    }
-                }
-            }
-        }
-        top.sort(Comparator.comparing(ResultRow::getCount));
-        return top;
+    private Map<ArtistDTO, Long> sortArtistsByVotes(Map<Long, Long> artists) {
+        return artists.entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .collect(Collectors.toMap(
+                        entry -> artistService.get(entry.getKey()),
+                        Map.Entry::getValue,
+                        Long::sum,
+                        LinkedHashMap::new));
     }
 
     @Override
-    public List<ResultRow<GenreDTO>> getTopGenre() {
-        List<ResultRow<GenreDTO>> top = this.genreService.getGenres().stream()
-                .map(ResultRow::new)
-                .collect(Collectors.toList());
+    public Map<GenreDTO, Long> getBestGenres() {
+        final Map<Long, Long> genreVotes = genreService.readAll()
+                .stream()
+                .collect(Collectors.toMap(GenreEntity::getId, genre -> 0L));
+        voteService.getVotes()
+                .stream()
+                .map(SavedVoteDTO::getVoteDTO)
+                .map(VoteDTO::getGenreIds)
+                .flatMap(Collection::stream)
+                .forEach(genreId -> genreVotes.put(
+                        genreId,
+                        genreVotes.get(genreId) + 1L));
+        return sortGenresByVotes(genreVotes);
+    }
 
-
-        for(SavedVoteDTO savedVoteDTO : voteService.get()){
-            int[] genres = savedVoteDTO.getVote().getGenres();
-
-            for (ResultRow<GenreDTO> genreDTOResultRow : top) {
-                for (int genre : genres) {
-                    if (genreDTOResultRow.getItem().getId() == genre) {
-                        genreDTOResultRow.inc();
-                        break;
-                    }
-                }
-            }
-        }
-        top.sort(Comparator.comparing(ResultRow::getCount));
-        return top;
+    private Map<GenreDTO, Long> sortGenresByVotes(Map<Long, Long> genres) {
+        return genres.entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .collect(Collectors.toMap(
+                        entry -> genreService.get(entry.getKey()),
+                        Map.Entry::getValue,
+                        Long::sum,
+                        LinkedHashMap::new));
     }
 
     @Override
-    public List<AboutRow> getAboutRows() {
-        return this.voteService.get().stream()
-                .map(i -> new AboutRow(i.getDtCreate(), i.getVote().getAbout()))
-                .sorted(Comparator.comparing(AboutRow::getDtCreate))
-                .collect(Collectors.toList());
+    public Map<LocalDateTime, String> getAbouts() {
+        List<SavedVoteDTO> votes = voteService.getVotes();
+        return votes.stream()
+                .sorted(Comparator.comparing(SavedVoteDTO::getDtCreate))
+                .collect(Collectors.toMap(
+                        SavedVoteDTO::getDtCreate,
+                        vote -> vote.getVoteDTO().getAbout(),
+                        (value1, value2) -> value1 + "\n\n"+ value2,
+                        LinkedHashMap::new));
+    }
+
+    @Override
+    public StatisticsDTO getStatistics() {
+        return new StatisticsDTO(getBestArtists(), getBestGenres(), getAbouts());
     }
 }

@@ -1,13 +1,19 @@
 package by.it_academy.vote.service.api;
 
-import by.it_academy.vote.core.dto.*;
+import by.it_academy.vote.core.dto.ArtistDTO;
+import by.it_academy.vote.core.dto.GenreDTO;
+import by.it_academy.vote.core.dto.StatisticsDTO;
 
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.Map;
 
 public interface IStatisticsService {
-    ResultDTO getResult();
 
-    List<ResultRow<ArtistDTO>> getTopArtist();
-    List<ResultRow<GenreDTO>> getTopGenre();
-    List<AboutRow> getAboutRows();
+    Map<ArtistDTO, Long> getBestArtists();
+
+    Map<GenreDTO, Long> getBestGenres();
+
+    Map<LocalDateTime, String> getAbouts();
+
+    StatisticsDTO getStatistics();
 }

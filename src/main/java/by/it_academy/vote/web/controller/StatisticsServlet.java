@@ -1,6 +1,6 @@
 package by.it_academy.vote.web.controller;
 
-import by.it_academy.vote.core.dto.*;
+import by.it_academy.vote.core.dto.StatisticsDTO;
 import by.it_academy.vote.service.api.IStatisticsService;
 import by.it_academy.vote.service.fabrics.StatisticsServiceSingleton;
 
@@ -9,36 +9,58 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.beans.PropertyVetoException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
+import java.time.format.DateTimeFormatter;
 
 @WebServlet(name = "StatisticsServlet", urlPatterns = "/statistics")
 public class StatisticsServlet extends HttpServlet {
-    private IStatisticsService statisticsService;
+    private final IStatisticsService service;
 
-    public StatisticsServlet() throws PropertyVetoException {
-        this.statisticsService = StatisticsServiceSingleton.getInstance();
+    public StatisticsServlet() {
+        this.service = StatisticsServiceSingleton.getInstance();
     }
-
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+
         req.setCharacterEncoding("UTF-8");
         resp.setContentType("text/html; charset=UTF-8");
 
-        ResultDTO result = statisticsService.getResult();
-
+        StatisticsDTO statistics = service.getStatistics();
         PrintWriter writer = resp.getWriter();
 
-        List<ResultRow<ArtistDTO>> topArtist = result.getTopArtist();
-        topArtist.forEach(i -> writer.write("<p>" + i.getItem().getName() + " - " + i.getCount() + "</p>"));
+        writeBestArtists(writer, statistics);
+        writeBestGenres(writer, statistics);
+        writeAbouts(writer, statistics);
+    }
 
-        List<ResultRow<GenreDTO>> topGenre = result.getTopGenre();
-        topGenre.forEach(i -> writer.write("<p>" + i.getItem().getName() + " - " + i.getCount() + "</p>"));
+    private void writeBestArtists(PrintWriter writer, StatisticsDTO statistics) {
+        writer.append("<b>Best artists:</b><br>");
+        statistics.getBestArtists()
+                .forEach((key, value) -> writer.append(key.getName())
+                        .append(" - ")
+                        .append(value.toString())
+                        .append(" votes<br>"));
+    }
 
-        List<AboutRow> aboutRows = result.getAboutRows();
-        aboutRows.forEach(i -> writer.write("<p>" + i.getDtCreate() + " - " + i.getAbout()+ "</p>"));
+    private void writeBestGenres(PrintWriter writer, StatisticsDTO statistics) {
+        writer.append("<b>Best genres:</b><br>");
+        statistics.getBestGenres()
+                .forEach((key, value) -> writer.append(key.getName())
+                        .append(" - ")
+                        .append(value.toString())
+                        .append(" votes<br>"));
+    }
 
+    private void writeAbouts(PrintWriter writer, StatisticsDTO statistics) {
+        writer.append("<b>Information about voters:</b><br>");
+        DateTimeFormatter formatter =
+                DateTimeFormatter.ofPattern("HH:mm:ss, dd.MM.yyyy");
+        statistics.getAbouts()
+                .forEach((key, value) -> writer.append(key.format(formatter))
+                        .append(" - ")
+                        .append(value)
+                        .append("<br>"));
     }
 }
